@@ -1,0 +1,30 @@
+{
+  "name": "kilo-cli-bridge",
+  "displayName": "Kilo CLI Compliance Bridge",
+  "description": "Deterministic Pre-Prompt and Post-Prompt Validation Bridge Wrapper for the Kilo CLI Engine inside Termux",
+  "version": "2.0.0",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Automation"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "aidde.repoInit",
+        "title": "Kilo Bridge: Initialize Repository Security (/repo_init)"
+      },
+      {
+        "command": "aidde.executeTask",
+        "title": "Kilo Bridge: Route Task Through Guard Gates"
+      }
+    ]
+  }
+}
