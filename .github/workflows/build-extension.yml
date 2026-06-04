@@ -1,0 +1,54 @@
+name: Kilo Bridge Extension CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    name: Validate and Build Extension
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-node-version: '18'
+          cache: 'npm'
+
+      - name: Install Development Dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm install
+          else
+            npm init -y
+            npm install --save-dev @types/vscode
+          fi
+
+      - name: Verify Extension Manifest & Syntax
+        run: |
+          node -e "
+          const fs = require('fs');
+          const manifest = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          if (!manifest.name || !manifest.main) {
+            console.error('Validation Failed: Missing core manifest properties.');
+            process.exit(1);
+          }
+          console.log('✅ Manifest structure verified: ' + manifest.name);
+          "
+
+      - name: Dry-Run Compilation Check
+        run: |
+          if [ -f extension.js ]; then
+            node --check extension.js
+            console.log("✅ Extension main entry point syntax is valid.");
+          else
+            console.error("❌ Fatal: extension.js missing from repository root.");
+            process.exit(1);
+          fi
+          
